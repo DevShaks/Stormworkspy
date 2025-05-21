@@ -10,6 +10,8 @@ class Stormworkspy():
         object.__setattr__(self, "num_in_names", {})
         object.__setattr__(self, "bool_out_names", {})
         object.__setattr__(self, "bool_in_names", {})
+        # mapping for registered sensors
+        object.__setattr__(self, "sensors", {})
 
         self.name = name
         self.innums = [0.0] * 32
@@ -68,6 +70,14 @@ class Stormworkspy():
     def set_bool_input(self, name, index=None):
         """Register a boolean input channel name."""
         return self._register_name(self.bool_in_names, name, index, 32)
+
+    def register_sensor(self, name, sensor_cls, **channels):
+        """Register a sensor by name with the provided sensor class and channel mapping."""
+        if name in self.sensors:
+            raise ValueError(f"{name} already registered")
+        sensor = sensor_cls(**channels)
+        self.sensors[name] = sensor
+        return sensor
 
     def _setup_routes(self):
         # Define the Flask route as a closure so it has access to self.
@@ -135,6 +145,10 @@ class Stormworkspy():
     # ------------------------------------------------------------------
     # Attribute access for named channels
     def __getattr__(self, name):
+        if name in self.sensors:
+            sensor = self.sensors[name]
+            sensor.update(self.innums, self.inbools)
+            return sensor
         if name in self.num_out_names:
             return self.outnums[self.num_out_names[name]]
         if name in self.bool_out_names:
