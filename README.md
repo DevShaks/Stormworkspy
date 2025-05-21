@@ -55,6 +55,14 @@ sw.run_api(host="0.0.0.0", port=5000)
 
 The API will read `num1` and `bool1` from the query parameters, update the internal input arrays, and return a JSON payload containing all 64 output fields.
 
+## Running Tests
+
+To run the library's unit tests use the built in test discovery:
+
+```bash
+python -m unittest discover tests
+```
+
 ### Named channels
 
 You can register human friendly names for the numeric and boolean channels. Once
