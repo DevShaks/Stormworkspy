@@ -67,6 +67,7 @@ sw.set_num_output("oMotor")  # uses the next free numeric output slot (index 0)
 sw.oMotor = 11               # equivalent to sw.outnums[0] = 11
 ```
 
+
 ### Sensors
 
 Sensors encapsulate logic for reading values from the input channels. Register a

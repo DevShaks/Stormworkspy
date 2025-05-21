@@ -77,6 +77,7 @@ class Stormworkspy():
         The attribute type is added to class annotations so IDEs can offer
         autocompletion for the sensor's methods.
         """
+
         if name in self.sensors:
             raise ValueError(f"{name} already registered")
         sensor = sensor_cls(**channels)
@@ -174,6 +175,7 @@ class Stormworkspy():
                 self.sensors[name] = value
                 object.__setattr__(self, name, value)
                 return
+
             if name in self.num_out_names:
                 self.outnums[self.num_out_names[name]] = value
                 return

@@ -2,6 +2,7 @@ import unittest
 from Stormworkspy import Stormworkspy
 from Stormworkspy.sensors import SW_LaserDistanceSensor, SW_Altimeter
 
+
 class TestSensorRegistration(unittest.TestCase):
     def test_register_and_access_sensor(self):
         sw = Stormworkspy()
@@ -16,6 +17,7 @@ class TestSensorRegistration(unittest.TestCase):
         sw.register_sensor('alt', SW_Altimeter, channel_altitude=0)
         with self.assertRaises(ValueError):
             sw.register_sensor('alt', SW_Altimeter, channel_altitude=1)
+
 
 if __name__ == '__main__':
     unittest.main()
