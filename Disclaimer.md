@@ -1,0 +1,1 @@
+This project, Stormworkspy, is an independent, community-developed Python library designed to interface with Stormworks: Build and Rescue. It is not affiliated with, endorsed by, or associated with Geometa, the developers of Stormworks: Build and Rescue.

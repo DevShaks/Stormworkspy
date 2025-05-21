@@ -128,6 +128,10 @@ class SW_TemperatureSensor:
 
     def get_temperature(self) -> float:
         return self._temperature
+    
+    def get_temperature_fahrenheit(self) -> float:
+        """Convert Celsius to Fahrenheit."""
+        return (self._temperature * 9/5) + 32
 
     def update(self, num_channels: list[float], bool_channels: list[bool]):
         if self.channel_temperature is not None and self.channel_temperature < len(num_channels):
