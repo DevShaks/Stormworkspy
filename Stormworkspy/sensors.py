@@ -1,3 +1,10 @@
+def _idx(channel: int | None) -> int | None:
+    """Convert a 1-based channel number to a zero-based index."""
+    if channel is None:
+        return None
+    return channel - 1
+
+
 class SW_PlayerSensor:
     """
     Player Sensor.
@@ -12,8 +19,8 @@ class SW_PlayerSensor:
         detected: True if at least one player detected
     """
     def __init__(self, channel_players: int = None, channel_detected: int = None):
-        self.channel_players = channel_players
-        self.channel_detected = channel_detected
+        self.channel_players = _idx(channel_players)
+        self.channel_detected = _idx(channel_detected)
         # internal storage
         self._players = 0
         self._detected = False
@@ -43,8 +50,8 @@ class SW_WindSensor:
         speed: Relative speed of the wind in m/s
     """
     def __init__(self, channel_direction: int = None, channel_speed: int = None):
-        self.channel_direction = channel_direction
-        self.channel_speed = channel_speed
+        self.channel_direction = _idx(channel_direction)
+        self.channel_speed = _idx(channel_speed)
         self._direction = 0.0
         self._speed = 0.0
 
@@ -72,7 +79,7 @@ class SW_RainSensor:
         intensity: Rain intensity (0-1)
     """
     def __init__(self, channel_intensity: int = None):
-        self.channel_intensity = channel_intensity
+        self.channel_intensity = _idx(channel_intensity)
         self._intensity = 0.0
 
     def get_intensity(self) -> float:
@@ -94,7 +101,7 @@ class SW_HumiditySensor:
         humidity: Humidity value (0-1)
     """
     def __init__(self, channel_humidity: int = None):
-        self.channel_humidity = channel_humidity
+        self.channel_humidity = _idx(channel_humidity)
         self._humidity = 0.0
 
     def get_humidity(self) -> float:
@@ -116,7 +123,7 @@ class SW_TemperatureSensor:
         temperature: Ambient temperature in °C
     """
     def __init__(self, channel_temperature: int = None):
-        self.channel_temperature = channel_temperature
+        self.channel_temperature = _idx(channel_temperature)
         self._temperature = 0.0
 
     def get_temperature(self) -> float:
@@ -138,7 +145,7 @@ class SW_TiltSensor:
         tilt: Tilt angle (-0.25 to 0.25)
     """
     def __init__(self, channel_tilt: int = None):
-        self.channel_tilt = channel_tilt
+        self.channel_tilt = _idx(channel_tilt)
         self._tilt = 0.0
 
     def get_tilt(self) -> float:
@@ -181,23 +188,23 @@ class SW_PhysicsSensor:
         channel_roll: int = None,
         channel_heading: int = None,
     ):
-        self.channel_pos_x = channel_pos_x
-        self.channel_pos_y = channel_pos_y
-        self.channel_pos_z = channel_pos_z
-        self.channel_rot_x = channel_rot_x
-        self.channel_rot_y = channel_rot_y
-        self.channel_rot_z = channel_rot_z
-        self.channel_vel_x = channel_vel_x
-        self.channel_vel_y = channel_vel_y
-        self.channel_vel_z = channel_vel_z
-        self.channel_angvel_x = channel_angvel_x
-        self.channel_angvel_y = channel_angvel_y
-        self.channel_angvel_z = channel_angvel_z
-        self.channel_speed_absolute = channel_speed_absolute
-        self.channel_angspeed_absolute = channel_angspeed_absolute
-        self.channel_pitch = channel_pitch
-        self.channel_roll = channel_roll
-        self.channel_heading = channel_heading
+        self.channel_pos_x = _idx(channel_pos_x)
+        self.channel_pos_y = _idx(channel_pos_y)
+        self.channel_pos_z = _idx(channel_pos_z)
+        self.channel_rot_x = _idx(channel_rot_x)
+        self.channel_rot_y = _idx(channel_rot_y)
+        self.channel_rot_z = _idx(channel_rot_z)
+        self.channel_vel_x = _idx(channel_vel_x)
+        self.channel_vel_y = _idx(channel_vel_y)
+        self.channel_vel_z = _idx(channel_vel_z)
+        self.channel_angvel_x = _idx(channel_angvel_x)
+        self.channel_angvel_y = _idx(channel_angvel_y)
+        self.channel_angvel_z = _idx(channel_angvel_z)
+        self.channel_speed_absolute = _idx(channel_speed_absolute)
+        self.channel_angspeed_absolute = _idx(channel_angspeed_absolute)
+        self.channel_pitch = _idx(channel_pitch)
+        self.channel_roll = _idx(channel_roll)
+        self.channel_heading = _idx(channel_heading)
         # internal storage
         self._values = {k: 0.0 for k in [
             'pos_x','pos_y','pos_z','rot_x','rot_y','rot_z',
@@ -232,7 +239,7 @@ class SW_LinearSpeedSensor:
         speed: Speed in m/s
     """
     def __init__(self, channel_speed: int = None):
-        self.channel_speed = channel_speed
+        self.channel_speed = _idx(channel_speed)
         self._speed = 0.0
 
     def get_speed(self) -> float:
@@ -254,7 +261,7 @@ class SW_DistanceSensor:
         distance: Distance in meters
     """
     def __init__(self, channel_distance: int = None):
-        self.channel_distance = channel_distance
+        self.channel_distance = _idx(channel_distance)
         self._distance = 0.0
 
     def get_distance(self) -> float:
@@ -276,7 +283,7 @@ class SW_LaserDistanceSensor:
         distance: Distance in meters
     """
     def __init__(self, channel_distance: int = None):
-        self.channel_distance = channel_distance
+        self.channel_distance = _idx(channel_distance)
         self._distance = 0.0
 
     def get_distance(self) -> float:
@@ -298,7 +305,7 @@ class SW_LaserPointSensor:
         direction: Direction to the beacon
     """
     def __init__(self, channel_direction: int = None):
-        self.channel_direction = channel_direction
+        self.channel_direction = _idx(channel_direction)
         self._direction = 0.0
 
     def get_direction(self) -> float:
@@ -325,8 +332,8 @@ class SW_CompassSensor:
         backlight: Backlight on/off
     """
     def __init__(self, channel_heading: int = None, channel_backlight: int = None):
-        self.channel_heading = channel_heading
-        self.channel_backlight = channel_backlight
+        self.channel_heading = _idx(channel_heading)
+        self.channel_backlight = _idx(channel_backlight)
         self._heading = 0.0
         self._backlight = False
 
@@ -354,7 +361,7 @@ class SW_Altimeter:
         altitude: Altitude in meters
     """
     def __init__(self, channel_altitude: int = None):
-        self.channel_altitude = channel_altitude
+        self.channel_altitude = _idx(channel_altitude)
         self._altitude = 0.0
 
     def get_altitude(self) -> float:
@@ -377,8 +384,8 @@ class SW_GPS:
         y: Y coordinate
     """
     def __init__(self, channel_x: int = None, channel_y: int = None):
-        self.channel_x = channel_x
-        self.channel_y = channel_y
+        self.channel_x = _idx(channel_x)
+        self.channel_y = _idx(channel_y)
         self._x = 0.0
         self._y = 0.0
 
@@ -404,8 +411,8 @@ class SW_TorqueMeter:
         force: Torque force
     """
     def __init__(self, channel_rps: int = None, channel_force: int = None):
-        self.channel_rps = channel_rps
-        self.channel_force = channel_force
+        self.channel_rps = _idx(channel_rps)
+        self.channel_force = _idx(channel_force)
         self._rps = 0.0
         self._force = 0.0
 
@@ -434,8 +441,8 @@ class SW_BasicRadar:
         distance: Distance to target
     """
     def __init__(self, channel_direction: int = None, channel_distance: int = None):
-        self.channel_direction = channel_direction
-        self.channel_distance = channel_distance
+        self.channel_direction = _idx(channel_direction)
+        self.channel_distance = _idx(channel_distance)
         self._direction = 0.0
         self._distance = 0.0
 
@@ -464,8 +471,8 @@ class SW_PhalanxRadar:
         distance: Distance
     """
     def __init__(self, channel_direction: int = None, channel_distance: int = None):
-        self.channel_direction = channel_direction
-        self.channel_distance = channel_distance
+        self.channel_direction = _idx(channel_direction)
+        self.channel_distance = _idx(channel_distance)
         self._direction = 0.0
         self._distance = 0.0
 
@@ -494,8 +501,8 @@ class SW_RadarDish:
         distance: Distance
     """
     def __init__(self, channel_direction: int = None, channel_distance: int = None):
-        self.channel_direction = channel_direction
-        self.channel_distance = channel_distance
+        self.channel_direction = _idx(channel_direction)
+        self.channel_distance = _idx(channel_distance)
         self._direction = 0.0
         self._distance = 0.0
 
@@ -519,7 +526,8 @@ class SW_RadarAWACS:
         distance: Distance
     """
     def __init__(self, channel_direction=None, channel_distance=None):
-        self.channel_direction = channel_direction; self.channel_distance = channel_distance
+        self.channel_direction = _idx(channel_direction)
+        self.channel_distance = _idx(channel_distance)
         self._direction = 0.0; self._distance = 0.0
     def get_direction(self): return self._direction
     def get_distance(self): return self._distance
@@ -540,8 +548,10 @@ class SW_MissileRadar:
         distance: Distance
     """
     def __init__(self, channel_direction=None, channel_distance=None):
-        self.channel_direction=channel_direction; self.channel_distance=channel_distance
-        self._direction=0.0; self._distance=0.0
+        self.channel_direction = _idx(channel_direction)
+        self.channel_distance = _idx(channel_distance)
+        self._direction = 0.0
+        self._distance = 0.0
     def get_direction(self): return self._direction
     def get_distance(self): return self._distance
     def update(self, num_channels, bool_channels):
@@ -562,8 +572,10 @@ class SW_Sonar:
         angle: Relative angle to object
     """
     def __init__(self, channel_ping=None, channel_angle=None):
-        self.channel_ping=channel_ping; self.channel_angle=channel_angle
-        self._angle=0.0; self._ping=False
+        self.channel_ping = _idx(channel_ping)
+        self.channel_angle = _idx(channel_angle)
+        self._angle = 0.0
+        self._ping = False
     def is_ping(self): return self._ping
     def get_angle(self): return self._angle
     def update(self, num_channels, bool_channels):
@@ -582,7 +594,8 @@ class SW_FluidPressureSensor:
         pressure: Pressure reading
     """
     def __init__(self, channel_pressure=None):
-        self.channel_pressure=channel_pressure; self._pressure=0.0
+        self.channel_pressure = _idx(channel_pressure)
+        self._pressure = 0.0
     def get_pressure(self): return self._pressure
     def update(self, num_channels, bool_channels):
         if self.channel_pressure!=None and self.channel_pressure<len(num_channels): self._pressure=num_channels[self.channel_pressure]
@@ -600,8 +613,10 @@ class SW_FluidMeter:
         amount: Fluid amount (L)
     """
     def __init__(self, channel_capacity=None, channel_amount=None):
-        self.channel_capacity=channel_capacity; self.channel_amount=channel_amount
-        self._capacity=0.0; self._amount=0.0
+        self.channel_capacity = _idx(channel_capacity)
+        self.channel_amount = _idx(channel_amount)
+        self._capacity = 0.0
+        self._amount = 0.0
     def get_capacity(self): return self._capacity
     def get_amount(self): return self._amount
     def update(self, num_channels, bool_channels):
@@ -620,7 +635,8 @@ class SW_ClockSensor:
         time: Fraction of day
     """
     def __init__(self, channel_time=None):
-        self.channel_time=channel_time; self._time=0.0
+        self.channel_time = _idx(channel_time)
+        self._time = 0.0
     def get_time(self): return self._time
     def update(self, num_channels, bool_channels):
         if self.channel_time!=None and self.channel_time<len(num_channels): self._time=num_channels[self.channel_time]
