@@ -1,0 +1,5 @@
+# Core dependencies for Stormworkspy
+Flask>=2.0
+
+# Development and testing tools
+pytest
