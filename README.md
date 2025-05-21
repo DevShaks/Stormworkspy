@@ -1,1 +1,64 @@
 # Stormworkspy
+
+Stormworkspy is a lightweight Python library that exposes a simple Flask-based HTTP API for controlling in-game vehicles in *Stormworks: Build and Rescue*. It provides 32 numeric and 32 boolean channels for input and output, making it easy to interact with vehicles programmatically.
+
+## Features
+
+- Background Flask server with a single endpoint `/`
+- 32 numeric (`num1`-`num32`) and 32 boolean (`bool1`-`bool32`) parameters
+- Updates internal arrays from GET parameters and returns JSON with output states
+- Runs the server in a background thread for easy integration in existing scripts
+
+## Repository Structure
+
+```
+Stormworkspy/
+├── LICENSE              # MIT license information
+├── README.md            # Project documentation
+├── setup.py             # Packaging script
+└── Stormworkspy/        # Python package
+    ├── __init__.py      # Package version and exports
+    └── Stormworkspy.py  # Implementation of the Stormworkspy class
+```
+
+## Installation
+
+Stormworkspy requires **Python 3.6+** and [Flask](https://pypi.org/project/Flask/). Install the package directly from this repository:
+
+```bash
+pip install git+https://github.com/DevShaks/Stormworkspy.git
+```
+
+Or clone the repository and install locally:
+
+```bash
+git clone https://github.com/DevShaks/Stormworkspy.git
+cd Stormworkspy
+pip install .
+```
+
+## Quick Start
+
+Below is a minimal example that starts the API and modifies output values.
+
+```python
+from Stormworkspy import Stormworkspy
+
+sw = Stormworkspy()
+sw.outnums[0] = 1.23
+sw.outbools[0] = True
+sw.run_api(host="0.0.0.0", port=5000)
+
+# The API is now running in the background. Access:
+#   http://localhost:5000/?num1=42&bool1=true
+```
+
+The API will read `num1` and `bool1` from the query parameters, update the internal input arrays, and return a JSON payload containing all 64 output fields.
+
+## Contributing
+
+Contributions and bug reports are welcome. Please open an issue or submit a pull request on GitHub. Be sure to include tests and follow the existing code style where possible.
+
+## License
+
+This project is released under the terms of the MIT License. See [LICENSE](LICENSE) for details.
