@@ -4,8 +4,8 @@ import logging
 
 
 class Stormworkspy():
-    def __init__(self, name = "default"):
-        self.nema = name
+    def __init__(self, name="default"):
+        self.name = name
         self.innums = [0.0] * 32
         self.inbools = [False] * 32
         self.outnums = [0.0] * 32
@@ -14,6 +14,8 @@ class Stormworkspy():
         self.app = Flask(__name__)
         self._setup_routes()
         self.thread = None
+        self.host = None
+        self.port = None
 
         # Disable the Werkzeug logger (Flask's default HTTP request log)
         log = logging.getLogger('werkzeug')
@@ -47,18 +49,40 @@ class Stormworkspy():
                 response_data[f'bool{i}'] = str(self.outbools[i - 1]).lower()
             
             return jsonify(response_data)
+
+        @self.app.route('/shutdown', methods=['POST'])
+        def shutdown():
+            func = request.environ.get('werkzeug.server.shutdown')
+            if func:
+                func()
+            return 'Server shutting down...'
         
 
     def run_api(self, host='localhost', port=5000, debug=False):
         def run():
             self.app.run(host=host, port=port, debug=debug)
-        
+
         # Start the Flask app in a daemon thread so it runs in the background.
+        self.host = host
+        self.port = port
         self.thread = threading.Thread(target=run)
         self.thread.daemon = True
         self.thread.start()
         print(f"Flask API started on {host}:{port} in the background.")
 
     def stop_api(self):
+        if not self.thread:
+            return
 
-        self.thread
+        # Trigger Flask shutdown via the dedicated route
+        try:
+            import urllib.request
+            req = urllib.request.Request(
+                f'http://{self.host}:{self.port}/shutdown',
+                method='POST'
+            )
+            urllib.request.urlopen(req)
+        except Exception:
+            pass
+
+        self.thread.join()
