@@ -15,8 +15,8 @@ class TestAllSensors(unittest.TestCase):
         for cls in sensor_classes:
             sig = inspect.signature(cls.__init__)
             kwargs = {}
-            num_idx = 0
-            bool_idx = 0
+            num_idx = 1
+            bool_idx = 1
             mapping = {}
             for param_name in sig.parameters:
                 if param_name == "self":
@@ -34,10 +34,10 @@ class TestAllSensors(unittest.TestCase):
             for param, idx in mapping.items():
                 key = param[len("channel_") :]
                 if hasattr(sensor, "_values"):
-                    expected = self.num_channels[idx]
+                    expected = self.num_channels[idx - 1]
                     self.assertEqual(sensor._values[key], expected, f"{cls.__name__}.{key}")
                 else:
-                    expected = self.bool_channels[idx] if param in self.BOOL_PARAMS else self.num_channels[idx]
+                    expected = self.bool_channels[idx - 1] if param in self.BOOL_PARAMS else self.num_channels[idx - 1]
                     attr_name = "_" + key
                     self.assertEqual(getattr(sensor, attr_name), expected, f"{cls.__name__}.{key}")
 
