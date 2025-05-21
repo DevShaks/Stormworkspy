@@ -55,6 +55,18 @@ sw.run_api(host="0.0.0.0", port=5000)
 
 The API will read `num1` and `bool1` from the query parameters, update the internal input arrays, and return a JSON payload containing all 64 output fields.
 
+### Named channels
+
+You can register human friendly names for the numeric and boolean channels. Once
+registered, attributes transparently read from or write to the underlying
+arrays:
+
+```python
+sw = Stormworkspy()
+sw.set_num_output("oMotor")  # uses the next free numeric output slot (index 0)
+sw.oMotor = 11               # equivalent to sw.outnums[0] = 11
+```
+
 ## Contributing
 
 Contributions and bug reports are welcome. Please open an issue or submit a pull request on GitHub. Be sure to include tests and follow the existing code style where possible.
