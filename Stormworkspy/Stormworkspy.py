@@ -10,7 +10,7 @@ class Stormworkspy():
         object.__setattr__(self, "num_in_names", {})
         object.__setattr__(self, "bool_out_names", {})
         object.__setattr__(self, "bool_in_names", {})
-        # mapping for registered sensors
+        # registered sensors
         object.__setattr__(self, "sensors", {})
 
         self.name = name
@@ -72,11 +72,20 @@ class Stormworkspy():
         return self._register_name(self.bool_in_names, name, index, 32)
 
     def register_sensor(self, name, sensor_cls, **channels):
-        """Register a sensor by name with the provided sensor class and channel mapping."""
+        """Register a sensor and expose it as an attribute.
+
+        The attribute type is added to class annotations so IDEs can offer
+        autocompletion for the sensor's methods.
+        """
+
         if name in self.sensors:
             raise ValueError(f"{name} already registered")
         sensor = sensor_cls(**channels)
         self.sensors[name] = sensor
+        # update type hints for IDE autocompletion
+        annotations = dict(getattr(self.__class__, "__annotations__", {}))
+        annotations[name] = sensor_cls
+        self.__class__.__annotations__ = annotations
         return sensor
 
     def _setup_routes(self):
@@ -162,6 +171,11 @@ class Stormworkspy():
     def __setattr__(self, name, value):
         mappings_ready = 'num_out_names' in self.__dict__
         if mappings_ready:
+            if name in self.sensors:
+                self.sensors[name] = value
+                object.__setattr__(self, name, value)
+                return
+
             if name in self.num_out_names:
                 self.outnums[self.num_out_names[name]] = value
                 return

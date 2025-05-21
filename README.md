@@ -67,6 +67,22 @@ sw.set_num_output("oMotor")  # uses the next free numeric output slot (index 0)
 sw.oMotor = 11               # equivalent to sw.outnums[0] = 11
 ```
 
+
+### Sensors
+
+Sensors encapsulate logic for reading values from the input channels. Register a
+sensor with `register_sensor` and it becomes available as an attribute with IDE
+autocompletion:
+
+```python
+from Stormworkspy.sensors import SW_LaserDistanceSensor
+
+sw = Stormworkspy()
+sw.register_sensor("distance", SW_LaserDistanceSensor, channel_distance=2)
+
+print(sw.distance.get_distance())
+```
+
 ## Contributing
 
 Contributions and bug reports are welcome. Please open an issue or submit a pull request on GitHub. Be sure to include tests and follow the existing code style where possible.
