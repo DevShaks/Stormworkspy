@@ -5,6 +5,14 @@ import logging
 
 class Stormworkspy():
     def __init__(self, name="default"):
+        # mappings for named channels
+        object.__setattr__(self, "num_out_names", {})
+        object.__setattr__(self, "num_in_names", {})
+        object.__setattr__(self, "bool_out_names", {})
+        object.__setattr__(self, "bool_in_names", {})
+        # registered sensors
+        object.__setattr__(self, "sensors", {})
+
         self.name = name
         self.innums = [0.0] * 32
         self.inbools = [False] * 32
@@ -23,6 +31,61 @@ class Stormworkspy():
         log.disabled = True
         # Disable the Flask app logger
         self.app.logger.disabled = True
+
+    # ------------------------------------------------------------------
+    # Registration helpers
+    def _register_name(self, mapping, name, index, length):
+        if name in mapping:
+            raise ValueError(f"{name} already registered")
+
+        used = set(mapping.values())
+        if index is None:
+            for i in range(length):
+                if i not in used:
+                    index = i
+                    break
+            else:
+                raise ValueError("No free slots available")
+        else:
+            if not 0 <= index < length:
+                raise IndexError("index out of range")
+            if index in used:
+                raise ValueError(f"Index {index} already used")
+
+        mapping[name] = index
+        return index
+
+    def set_num_output(self, name, index=None):
+        """Register a numeric output channel name."""
+        return self._register_name(self.num_out_names, name, index, 32)
+
+    def set_bool_output(self, name, index=None):
+        """Register a boolean output channel name."""
+        return self._register_name(self.bool_out_names, name, index, 32)
+
+    def set_num_input(self, name, index=None):
+        """Register a numeric input channel name."""
+        return self._register_name(self.num_in_names, name, index, 32)
+
+    def set_bool_input(self, name, index=None):
+        """Register a boolean input channel name."""
+        return self._register_name(self.bool_in_names, name, index, 32)
+
+    def register_sensor(self, name, sensor_cls, **channels):
+        """Register a sensor and expose it as an attribute.
+
+        The attribute type is added to class annotations so IDEs can offer
+        autocompletion for the sensor's methods.
+        """
+        if name in self.sensors:
+            raise ValueError(f"{name} already registered")
+        sensor = sensor_cls(**channels)
+        self.sensors[name] = sensor
+        # update type hints for IDE autocompletion
+        annotations = dict(getattr(self.__class__, "__annotations__", {}))
+        annotations[name] = sensor_cls
+        self.__class__.__annotations__ = annotations
+        return sensor
 
     def _setup_routes(self):
         # Define the Flask route as a closure so it has access to self.
@@ -86,3 +149,42 @@ class Stormworkspy():
             pass
 
         self.thread.join()
+
+    # ------------------------------------------------------------------
+    # Attribute access for named channels
+    def __getattr__(self, name):
+        if name in self.sensors:
+            sensor = self.sensors[name]
+            sensor.update(self.innums, self.inbools)
+            return sensor
+        if name in self.num_out_names:
+            return self.outnums[self.num_out_names[name]]
+        if name in self.bool_out_names:
+            return self.outbools[self.bool_out_names[name]]
+        if name in self.num_in_names:
+            return self.innums[self.num_in_names[name]]
+        if name in self.bool_in_names:
+            return self.inbools[self.bool_in_names[name]]
+        raise AttributeError(name)
+
+    def __setattr__(self, name, value):
+        mappings_ready = 'num_out_names' in self.__dict__
+        if mappings_ready:
+            if name in self.sensors:
+                self.sensors[name] = value
+                object.__setattr__(self, name, value)
+                return
+            if name in self.num_out_names:
+                self.outnums[self.num_out_names[name]] = value
+                return
+            if name in self.bool_out_names:
+                self.outbools[self.bool_out_names[name]] = value
+                return
+            if name in self.num_in_names:
+                self.innums[self.num_in_names[name]] = value
+                return
+            if name in self.bool_in_names:
+                self.inbools[self.bool_in_names[name]] = value
+                return
+
+        object.__setattr__(self, name, value)
