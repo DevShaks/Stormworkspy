@@ -1,0 +1,35 @@
+name: Build and publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build container
+        run: docker build -t stormworkspy-builder .
+      - name: Run build inside container
+        env:
+          TWINE_USERNAME: ${{ github.actor }}
+          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          TWINE_REPOSITORY_URL: https://pypi.pkg.github.com/${{ github.repository_owner }}
+        run: |
+          docker run --rm \
+            -e TWINE_USERNAME \
+            -e TWINE_PASSWORD \
+            -e TWINE_REPOSITORY_URL \
+            -v ${{ github.workspace }}:/app \
+            stormworkspy-builder
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/*"
+          tag: v${{ github.run_number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true

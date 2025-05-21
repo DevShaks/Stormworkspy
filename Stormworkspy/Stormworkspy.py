@@ -60,5 +60,9 @@ class Stormworkspy():
         print(f"Flask API started on {host}:{port} in the background.")
 
     def stop_api(self):
-
-        self.thread
+        """Stop the background Flask server if it is running."""
+        if self.thread and self.thread.is_alive():
+            # The Flask development server does not provide a direct shutdown
+            # mechanism. This method waits for the thread to finish if it has
+            # been signaled to stop elsewhere.
+            self.thread.join(timeout=0)
