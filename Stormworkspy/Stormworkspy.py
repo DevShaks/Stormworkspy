@@ -35,24 +35,31 @@ class Stormworkspy():
     # ------------------------------------------------------------------
     # Registration helpers
     def _register_name(self, mapping, name, index, length):
+        """Register ``name`` in ``mapping`` using 1-based channel numbers."""
         if name in mapping:
             raise ValueError(f"{name} already registered")
 
         used = set(mapping.values())
         if index is None:
+            # find the first unused 0-based slot
             for i in range(length):
                 if i not in used:
                     index = i
                     break
             else:
                 raise ValueError("No free slots available")
-        else:
-            if not 0 <= index < length:
-                raise IndexError("index out of range")
-            if index in used:
-                raise ValueError(f"Index {index} already used")
+            # return 1-based channel number
+            mapping[name] = index
+            return index + 1
 
-        mapping[name] = index
+        # convert provided 1-based index to 0-based
+        idx = index - 1
+        if not 0 <= idx < length:
+            raise IndexError("index out of range")
+        if idx in used:
+            raise ValueError(f"Index {index} already used")
+
+        mapping[name] = idx
         return index
 
     def set_num_output(self, name, index=None):
