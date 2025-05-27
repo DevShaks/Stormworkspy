@@ -645,3 +645,32 @@ class SW_ClockSensor:
     def update(self, num_channels, bool_channels):
         if self.channel_time!=None and self.channel_time<len(num_channels): self._time=num_channels[self.channel_time]
 
+
+# Export all sensor classes for convenient imports
+__all__ = [
+    "SW_PlayerSensor",
+    "SW_WindSensor",
+    "SW_RainSensor",
+    "SW_HumiditySensor",
+    "SW_TemperatureSensor",
+    "SW_TiltSensor",
+    "SW_PhysicsSensor",
+    "SW_LinearSpeedSensor",
+    "SW_DistanceSensor",
+    "SW_LaserDistanceSensor",
+    "SW_LaserPointSensor",
+    "SW_CompassSensor",
+    "SW_Altimeter",
+    "SW_GPS",
+    "SW_TorqueMeter",
+    "SW_BasicRadar",
+    "SW_PhalanxRadar",
+    "SW_RadarDish",
+    "SW_RadarAWACS",
+    "SW_MissileRadar",
+    "SW_Sonar",
+    "SW_FluidPressureSensor",
+    "SW_FluidMeter",
+    "SW_ClockSensor",
+]
+
