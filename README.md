@@ -73,7 +73,7 @@ arrays:
 
 ```python
 sw = Stormworkspy()
-sw.set_num_output("oMotor")  # uses the next free numeric output slot (index 0)
+sw.set_num_output("oMotor")  # uses the next free numeric output slot (channel 1)
 sw.oMotor = 11               # equivalent to sw.outnums[0] = 11
 ```
 

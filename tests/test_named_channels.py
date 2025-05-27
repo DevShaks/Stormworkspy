@@ -12,7 +12,7 @@ class TestNamedChannels(unittest.TestCase):
 
     def test_bool_input_attribute(self):
         sw = Stormworkspy()
-        sw.set_bool_input("iActive", index=1)
+        sw.set_bool_input("iActive", index=2)
         sw.inbools[1] = True
         self.assertTrue(sw.iActive)
 
