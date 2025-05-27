@@ -38,12 +38,19 @@ cd Stormworkspy
 pip install .
 ```
 
+After installation the library can be imported using the lowercase alias
+`stormworkspy`:
+
+```python
+from stormworkspy import Stormworkspy
+```
+
 ## Quick Start
 
 Below is a minimal example that starts the API and modifies output values.
 
 ```python
-from Stormworkspy import Stormworkspy
+from stormworkspy import Stormworkspy
 
 sw = Stormworkspy()
 sw.outnums[0] = 1.23
@@ -87,7 +94,7 @@ autocompletion. Channels are registered using 1-based channel numbers (e.g.
 `channel_distance=1` corresponds to `num1`):
 
 ```python
-from Stormworkspy.sensors import SW_LaserDistanceSensor
+from stormworkspy import SW_LaserDistanceSensor
 
 sw = Stormworkspy()
 sw.register_sensor("distance", SW_LaserDistanceSensor, channel_distance=2)
